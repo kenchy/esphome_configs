@@ -1,0 +1,26 @@
+---
+logger:
+  level: VERBOSE #VERBOSE #DEBUG #INFO
+  #baud_rate: 115200 # Set to zero to disable serial over UART
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_pw
+
+wifi:
+  #use_address: "{name}.kenchy.co.uk"
+  ssid: !secret yf_ssid
+  password: !secret yf_pw
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "${name} Fback Hotspot"
+    password: !secret fb_pw
+
+captive_portal:
+
