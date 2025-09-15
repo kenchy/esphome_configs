@@ -1,0 +1,83 @@
+---
+substitutions:
+  name: 2wfl03
+
+esphome:
+  name: ${name}
+  friendly_name: ${name}
+  platformio_options:
+    board_build.f_flash: 40000000L
+    board_build.flash_mode: dio
+    board_build.flash_size: 4MB
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: esp32c3
+  framework:
+    type: esp-idf
+
+output:
+  - platform: ledc
+    pin: GPIO20
+    id: pina
+  - platform: ledc
+    pin: GPIO21
+    id: pinb
+
+
+light:
+  - platform: hbridge
+    id: ledstrings
+    name: "test hbridge"
+    pin_a: pina
+    pin_b: pinb
+    on_turn_on:
+    - light.turn_on:
+       id: ledstrings
+       effect: "Flash A-B 500ms"
+    effects:
+      - strobe:
+          name: "Flash A-B 500ms"
+          colors:
+            - state: true
+              color_temperature: 2000 K
+              duration: 500ms
+            - state: true
+              color_temperature: 6534 K
+              duration: 500ms
+      - strobe:
+          name: "Flash A-AB-B 500ms"
+          colors:
+            - state: true
+              color_temperature: 2000 K
+              duration: 500ms
+            - state: true
+              color_temperature: 3500 K
+              duration: 500ms
+            - state: true
+              color_temperature: 6534 K
+              duration: 500ms
+            - state: true
+              color_temperature: 3500 K
+              duration: 500ms
+      - lambda:
+          name: "Fade A-AB-B 10s"
+          update_interval: 10s
+          lambda: |-
+            static int state = 0;
+            auto call = id(ledstrings).make_call();
+            call.set_transition_length(10000);
+            if (state == 0) {
+              call.set_warm_white(1.0);
+              call.set_cold_white(0.0);
+            } else if (state ==1) {
+              call.set_warm_white(0.0);
+              call.set_cold_white(1.0);
+            }
+            call.perform();
+            state += 1;
+            if (state == 2)
+              state = 0;
+
+<<: !include pn_pac_common.yaml
+
