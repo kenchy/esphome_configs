@@ -1,0 +1,81 @@
+---
+substitutions:
+  name: xmasstars
+  climate_name: ${name}
+
+esphome:
+  name: ${name}
+  friendly_name: ${name}
+  platformio_options:
+    board_build.f_flash: 40000000L
+    board_build.flash_mode: dio
+    board_build.flash_size: 4MB
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: esp32c3
+  framework:
+    type: esp-idf
+
+light:
+ - platform: esp32_rmt_led_strip
+   id: ${name}
+   rgb_order: RGB
+   chipset: WS2812
+   pin: GPIO5
+   num_leds: 66
+   rmt_channel: 0
+   name: ${name}
+   on_turn_on:
+   - light.turn_on:
+       id: ${name}
+       effect: "Red-Green Twinkle"
+   effects:
+     - addressable_color_wipe:
+          name: Color Wipe Effect With Custom Values
+          colors:
+            - red: 100%
+              green: 100%
+              blue: 100%
+              num_leds: 5
+              gradient: true
+            - red: 0%
+              green: 0%
+              blue: 0%
+              num_leds: 1
+          add_led_interval: 100ms
+          reverse: false
+     - addressable_twinkle:
+          name: Twinkle Effect With Custom Values
+          twinkle_probability: 5%
+          progress_interval: 4ms
+     - addressable_fireworks
+     - addressable_rainbow
+     - addressable_lambda:
+         name: "Christmas RedGreen (Static)"
+         lambda: |-
+           for (int i = 1; i <  it.size(); i+=2) {
+             it[i] = light::ESPColor(255, 0, 18);
+           }
+           for (int i = 0; i <  it.size(); i+=2) {
+             it[i] = light::ESPColor(0, 179, 44);
+           }
+     - addressable_lambda:
+         name: "Red-Green Twinkle"
+         update_interval: 100ms
+         lambda: |-
+            for (int i = 0; i < it.size(); i++) {
+              if (rand() % 10 == 0) {  // Randomly select some LEDs to twinkle
+                auto current_color = it[i].get();
+                if (current_color.red == 255 && current_color.green == 0 && current_color.blue == 0) {
+                  it[i] = esphome::Color(0, 255, 0);  // Change from red to green
+                } else if (current_color.red == 0 && current_color.green == 255 && current_color.blue == 0) {
+                  it[i] = esphome::Color(0, 0, 255);  // Change from green to blue
+                } else {
+                  it[i] = esphome::Color(255, 0, 0);  // Change from blue to red
+                }
+              }
+            }
+
+<<: !include pn_pac_common.yaml
+

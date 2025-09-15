@@ -1,0 +1,113 @@
+---
+substitutions:
+  name: mirroronboard
+
+esphome:
+  name: ${name}
+  friendly_name: ${name}
+  on_boot:
+      - wait_until:
+          condition:
+            api.connected:
+          timeout: 8s
+      - lambda: |-
+          id(mirror_brightness).update();
+      - if:
+          condition:
+            lambda: 'return id(mirror_brightness).state > 0.2;'
+          then:
+            - switch.turn_off: mirror_switch
+
+esp8266:
+  board: nodemcuv2
+  #restore_from_flash: True
+
+output:
+  - platform: esp8266_pwm
+    id: pwm_output
+    frequency: 50Hz
+    pin: D8
+
+servo:
+  - id: my_servo
+    output: pwm_output
+
+i2c:
+
+sensor:
+  - platform: bh1750
+    id: mirror_brightness
+    name: "Mirror Test Brightness"
+    update_interval: 10s
+
+
+switch:
+  - platform: template
+    restore_mode: disabled
+    name: "Dummy Light"
+    id: mirror_switch
+
+    turn_on_action:
+      - lambda: |-
+          id(mirror_brightness).update();
+      - if:
+          condition:
+            lambda: 'return id(mirror_brightness).state > 0.2;'
+          then:
+            - switch.template.publish:
+                id: mirror_switch
+                state: ON
+          else:
+            - switch.template.publish:
+                id: mirror_switch
+                state: ON
+            - servo.write: 
+                id: my_servo
+                level: -55.0%
+            - delay: 500ms
+            - servo.write: 
+                id: my_servo
+                level: -42.0%
+            - delay: 500ms
+            - servo.write: 
+                id: my_servo
+                level: -60.0%
+            - lambda: |-
+                id(mirror_brightness).update();
+            - delay: 1s
+
+    turn_off_action:
+      - lambda: |-
+          id(mirror_brightness).update();
+      - if:
+          condition:
+            lambda: 'return id(mirror_brightness).state <= 0.2;'
+          then:
+            - switch.template.publish:
+                id: mirror_switch
+                state: OFF
+          else:
+            - switch.template.publish:
+                id: mirror_switch
+                state: OFF
+            - servo.write: 
+                id: my_servo
+                level: -55.0%
+            - delay: 500ms
+            - servo.write: 
+                id: my_servo
+                level: -42.0%
+            - delay: 500ms
+            - servo.write: 
+                id: my_servo
+                level: -60.0%
+            - lambda: |-
+                id(mirror_brightness).update();
+            - delay: 1s
+
+
+  - platform: restart
+    name: "Mirror ESP Restart"
+
+<<: !include yf_pac_common.yaml
+

@@ -1,0 +1,112 @@
+---
+substitutions:
+  name: waveshare
+  climate_name: ${name}
+
+esphome:
+  name: ${name}
+  friendly_name: ${name}
+
+external_components:
+  - source: github://pr#6209
+    components: [ waveshare_epaper ]
+
+esp32:
+  board: esp32doit-devkit-v1
+  #board: nodemcu-32s
+  #variant: esp32c3
+  framework:
+    type: arduino
+    #type: esp-idf
+
+font:
+  - file: '/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf'
+    id: small
+    size: 20
+  - file: '/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf'
+    id: medium
+    size: 25
+  - file: '/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf'
+    id: large
+    size: 40
+
+spi:
+  clk_pin: GPIO13
+  mosi_pin: GPIO27
+
+sensor:
+  - platform: homeassistant
+    id: pylonpercent
+    entity_id: sensor.solarman_battery
+  - platform: homeassistant
+    id: carpercent
+    entity_id: sensor.mg_eh32_x8_state_of_charge
+  - platform: homeassistant
+    id: solartoday
+    entity_id: sensor.solcast_pv_forecast_forecast_today
+  - platform: homeassistant
+    id: solartmrw
+    entity_id: sensor.solcast_pv_forecast_forecast_tomorrow
+  - platform: homeassistant
+    id: chargewatt
+    entity_id: sensor.solarman_battery_power
+  - platform: homeassistant
+    id: panelout
+    entity_id: sensor.cvg8bm704l_pv_output_actual
+  - platform: homeassistant
+    id: outsidetemp
+    entity_id: sensor.lottiepac_outside_temperature
+
+time:
+  - platform: homeassistant
+    id: localhatime
+
+text_sensor:
+  - platform: homeassistant
+    id: gunstate
+    entity_id: binary_sensor.mg_eh32_x8_charging_gun_state
+
+
+
+display:
+  - platform: waveshare_epaper
+    cs_pin: GPIO18
+    dc_pin: GPIO19
+    busy_pin: GPIO21
+    reset_pin: GPIO33
+    #model: 4.20in-bv2-bwr
+    model: 4.20in-v2
+    #full_update_every: 30
+    update_interval: 30s
+    reset_duration: 2ms
+    lambda: |-
+      it.print(0, 0, id(large), "Live Data @");
+      it.strftime(250, 0, id(large), TextAlign::LEFT, "%H:%M", id(localhatime).now());
+      it.line(0, 49, 400, 49);
+      it.line(0, 50, 400, 50);
+      it.printf(10, 60, id(medium), TextAlign::LEFT, "Home Battery Chg:");
+      it.printf(250, 60, id(medium), TextAlign::LEFT, "%.0f %%", id(pylonpercent).state);
+      it.printf(10, 90, id(small), TextAlign::LEFT, "Battery Charge:");
+      it.printf(250, 90, id(small), TextAlign::LEFT, "%.0f w", id(chargewatt).state);
+      it.printf(10, 110, id(small), TextAlign::LEFT, "Panel Out:");
+      it.printf(250, 110, id(small), TextAlign::LEFT, "%.1f w", id(panelout).state);
+      it.printf(10, 130, id(small), TextAlign::LEFT, "Forecast Solar Today:");
+      it.printf(250, 130, id(small), TextAlign::LEFT, "%.1f kw", id(solartoday).state);
+      it.printf(10, 150, id(small), TextAlign::LEFT, "Forecast Solar Tmrw:");
+      it.printf(250, 150, id(small), TextAlign::LEFT, "%.1f kw", id(solartmrw).state);
+      it.printf(10, 170, id(small), TextAlign::LEFT, "Outside Temp:");
+      it.printf(250, 170, id(small), TextAlign::LEFT, "%.1f C", id(outsidetemp).state);
+      it.line(0, 205, 400, 205);
+      it.line(0, 206, 400, 206);
+      it.printf(10, 225, id(medium), TextAlign::LEFT, "Car Charge:");
+      it.printf(250, 225, id(medium), TextAlign::LEFT, "%.1f %%", id(carpercent).state);
+      it.printf(10, 255, id(small), TextAlign::LEFT, "Charge Connection:");
+      //if ( id(gunstate).state.c_str() == "off" ) {
+      if ( id(gunstate).state == "off" ) {
+        it.printf(250, 255, id(small), TextAlign::LEFT, "Unplugged"); }
+      if ( id(gunstate).state == "on" ) {
+        it.printf(250, 255, id(small), TextAlign::LEFT, "Plugged In"); }
+      
+
+<<: !include network_pac_common.yaml
+
