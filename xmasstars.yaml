@@ -24,7 +24,7 @@ light:
    chipset: WS2812
    pin: GPIO5
    num_leds: 66
-   rmt_channel: 0
+   #rmt_channel: 0
    name: ${name}
    on_turn_on:
    - light.turn_on:
