@@ -1,0 +1,53 @@
+---
+substitutions:
+  name: froompac
+  climate_name: ${name}
+
+esphome:
+  name: ${name}
+  friendly_name: ${name}
+
+external_components:
+  source: github://DomiStyle/esphome-panasonic-ac
+  components: [panasonic_ac]
+
+uart:
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 9600
+  parity: EVEN
+  #stop_bits: 1
+  #data_bits: 8
+
+climate:
+  - platform: panasonic_ac
+    type: cnt
+    name: ${climate_name}
+    #horizontal_swing_select:
+    #  name: Horizontal Swing Mode
+    vertical_swing_select:
+      name: Vertical Swing Mode
+    mild_dry_switch:
+      name: Panasonic AC Mild Dry Switch
+    current_power_consumption:
+      name: Panasonic AC Power Consumption
+    outside_temperature:
+      name: Outside Temperature
+    #current_temperature_sensor: ${climate_name}_temp
+    visual:
+      temperature_step:
+        target_temperature: 0.5
+        current_temperature: 0.1
+
+#sensor:
+#  - platform: homeassistant
+#    id: ${climate_name}_temp
+#    entity_id: sensor.${climate_name}_temperature
+
+esp32:
+  board: nodemcu-32s
+  framework:
+    type: esp-idf
+
+<<: !include yf_pac_common.yaml
+

@@ -1,0 +1,43 @@
+---
+substitutions:
+  name: jessiepac
+  climate_name: ${name}
+
+esphome:
+  name: ${name}
+  friendly_name: ${name}
+
+external_components:
+  source: github://DomiStyle/esphome-panasonic-ac
+  components: [panasonic_ac]
+
+uart:
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 9600
+  parity: EVEN
+  #stop_bits: 1
+  #data_bits: 8
+
+climate:
+  - platform: panasonic_ac
+    type: cnt
+    name: ${climate_name}
+    vertical_swing_select:
+      name: Vertical Swing Mode
+    current_power_consumption:
+      name: Panasonic AC Power Consumption
+    outside_temperature:
+      name: Outside Temperature
+    visual:
+      temperature_step:
+        target_temperature: 0.5
+        current_temperature: 0.1
+
+esp32:
+  board: wemos_d1_mini32
+  framework:
+    type: esp-idf
+
+<<: !include yf_pac_common.yaml
+
