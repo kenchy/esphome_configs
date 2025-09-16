@@ -77,6 +77,6 @@ light:
               }
             }
 
-#<<: !include network_pac_common.yaml
+#<<: !include yf_pac_common.yaml
 <<: !include pn_pac_common.yaml
 

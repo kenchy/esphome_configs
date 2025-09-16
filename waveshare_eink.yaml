@@ -16,8 +16,8 @@ esp32:
   #board: nodemcu-32s
   #variant: esp32c3
   framework:
-    type: arduino
-    #type: esp-idf
+    #type: arduino
+    type: esp-idf
 
 font:
   - file: '/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf'
@@ -108,5 +108,5 @@ display:
         it.printf(250, 255, id(small), TextAlign::LEFT, "Plugged In"); }
       
 
-<<: !include network_pac_common.yaml
+<<: !include yf_pac_common.yaml
 
