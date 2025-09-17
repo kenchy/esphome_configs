@@ -108,5 +108,5 @@ display:
         it.printf(250, 255, id(small), TextAlign::LEFT, "Plugged In"); }
       
 
-<<: !include yf_pac_common.yaml
+<<: !include include/yf_pac_common.yaml
 

@@ -26,5 +26,5 @@ binary_sensor:
 web_server:
 
 
-<<: !include pn_pac_common.yaml
+<<: !include include/pn_pac_common.yaml
 

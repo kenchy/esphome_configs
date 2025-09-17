@@ -109,5 +109,5 @@ light:
               duration: 1000ms
 
 
-<<: !include pn_pac_common.yaml
+<<: !include include/pn_pac_common.yaml
 

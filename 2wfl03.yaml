@@ -79,5 +79,5 @@ light:
             if (state == 2)
               state = 0;
 
-<<: !include pn_pac_common.yaml
+<<: !include include/pn_pac_common.yaml
 

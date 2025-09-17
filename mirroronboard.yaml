@@ -109,5 +109,5 @@ switch:
   - platform: restart
     name: "Mirror ESP Restart"
 
-<<: !include yf_pac_common.yaml
+<<: !include include/yf_pac_common.yaml
 

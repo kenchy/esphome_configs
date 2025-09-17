@@ -39,5 +39,5 @@ esp32:
   framework:
     type: esp-idf
 
-<<: !include yf_pac_common.yaml
+<<: !include include/yf_pac_common.yaml
 

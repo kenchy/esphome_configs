@@ -77,5 +77,5 @@ light:
               }
             }
 
-<<: !include pn_pac_common.yaml
+<<: !include include/pn_pac_common.yaml
 

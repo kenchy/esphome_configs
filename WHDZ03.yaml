@@ -92,4 +92,4 @@ switch:
       then:
       - light.turn_off: wifi_light
 
-<<: !include pn_pac_common.yaml
+<<: !include include/pn_pac_common.yaml
