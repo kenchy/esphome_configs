@@ -43,16 +43,17 @@ light:
     - light.turn_on:
        id: ledstring01
        effect: "Flash A-B 500ms"
+       #effect: "Fade A-AB-B 10s"
     effects:
       - strobe:
           name: "Flash A-B 500ms"
           colors:
             - state: true
               color_temperature: 2000 K
-              duration: 500ms
+              duration: 1000ms
             - state: true
               color_temperature: 6534 K
-              duration: 500ms
+              duration: 1000ms
       - strobe:
           name: "Flash A-AB-B 500ms"
           colors:
@@ -102,10 +103,10 @@ light:
           colors:
             - state: true
               color_temperature: 2000 K
-              duration: 500ms
+              duration: 1000ms
             - state: true
               color_temperature: 6534 K
-              duration: 500ms
+              duration: 1000ms
 
 
 <<: !include pn_pac_common.yaml

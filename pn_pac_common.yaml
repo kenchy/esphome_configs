@@ -1,6 +1,7 @@
 ---
 logger:
-  level: VERBOSE #VERBOSE #DEBUG #INFO
+  #level: VERBOSE #VERBOSE #DEBUG #INFO
+  level: INFO #VERBOSE #DEBUG #INFO
   #baud_rate: 115200 # Set to zero to disable serial over UART
 
 # Enable Home Assistant API
