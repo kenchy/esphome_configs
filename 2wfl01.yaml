@@ -24,17 +24,24 @@ output:
   - platform: ledc
     pin: GPIO21
     id: pinb
+  - platform: ledc
+    pin: GPIO01
+    id: pinc
+  - platform: ledc
+    pin: GPIO00
+    id: pind
+
 
 
 light:
   - platform: hbridge
-    id: ledstrings
-    name: "test hbridge"
+    id: ledstring01
+    name: "Led_String_01"
     pin_a: pina
     pin_b: pinb
     on_turn_on:
     - light.turn_on:
-       id: ledstrings
+       id: ledstring01
        effect: "Flash A-B 500ms"
     effects:
       - strobe:
@@ -66,7 +73,7 @@ light:
           update_interval: 10s
           lambda: |-
             static int state = 0;
-            auto call = id(ledstrings).make_call();
+            auto call = id(ledstring01).make_call();
             call.set_transition_length(10000);
             if (state == 0) {
               call.set_warm_white(1.0);
@@ -79,6 +86,27 @@ light:
             state += 1;
             if (state == 2)
               state = 0;
+
+  - platform: hbridge
+    id: ledstring02
+    name: "Led_string_02"
+    pin_a: pinc
+    pin_b: pind
+    on_turn_on:
+    - light.turn_on:
+       id: ledstring02
+       effect: "Flash A-B 500ms"
+    effects:
+      - strobe:
+          name: "Flash A-B 500ms"
+          colors:
+            - state: true
+              color_temperature: 2000 K
+              duration: 500ms
+            - state: true
+              color_temperature: 6534 K
+              duration: 500ms
+
 
 <<: !include pn_pac_common.yaml
 
