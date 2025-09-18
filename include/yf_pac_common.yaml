@@ -13,7 +13,8 @@ ota:
     password: !secret ota_pw
 
 wifi:
-  use_address: "{name}.kenchy.co.uk"
+  domain: ""
+  use_address: "${name}.kenchy.co.uk"
   ssid: !secret yf_ssid
   password: !secret yf_pw
 
