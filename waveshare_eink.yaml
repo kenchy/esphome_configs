@@ -65,6 +65,9 @@ text_sensor:
   - platform: homeassistant
     id: gunstate
     entity_id: binary_sensor.mg_eh32_x8_charging_gun_state
+  - platform: homeassistant
+    id: ohmestate
+    entity_id: sensor.ohme_home_pro_status
 
 
 
@@ -107,6 +110,8 @@ display:
       if ( id(gunstate).state == "on" ) {
         it.printf(250, 255, id(small), TextAlign::LEFT, "Plugged In"); }
       
+      it.printf(10, 275, id(small), TextAlign::LEFT, "Ohme Status:");
+      it.printf(250, 275, id(small), TextAlign::LEFT, id(ohmestate).state.c_str());
 
 <<: !include include/yf_pac_common.yaml
 
