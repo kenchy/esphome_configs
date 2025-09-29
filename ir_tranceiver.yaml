@@ -51,5 +51,6 @@ button:
       - remote_transmitter.transmit_pioneer: 
           rc_code_1: 0x2000
 
-<<: !include include/pn_pac_default.yaml
+#<<: !include include/pn_pac_default.yaml
+<<: !include include/pw_pac_default.yaml
 
