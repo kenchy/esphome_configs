@@ -2,6 +2,11 @@
 substitutions:
   name: irt01
 
+globals:
+  - id: harccode
+    initial_value: '0x2004'
+    type: int
+
 esphome:
   name: ${name}
 
@@ -19,7 +24,7 @@ remote_transmitter:
     number: GPIO4
   carrier_duty_percent: 50%
  
-text_sensor:
+sensor:
   - platform: homeassistant
     id: Test_RC_Code
     entity_id: input_text.ac_rc_code
@@ -59,8 +64,15 @@ button:
   - platform: template
     name: "Code from HA"
     on_press:
+      - globals.set:
+          id: harccode
+          value: !lambda return int(id(Test_RC_Code));
       - remote_transmitter.transmit_pioneer: 
-          rc_code_1: lambda return id(Test_RC_Code).state.c_str();
+          rc_code_1: !lambda return id(harccode);
+ #         rc_code_1: args: ["id(Test_RC_Code).state"] 
+ #         rc_code_1: !lambda |-
+ #           id(Test_RC_Code).publish_state(str.c_str());
+
+
 #<<: !include include/pn_pac_default.yaml
 <<: !include include/pw_pac_default.yaml
-
