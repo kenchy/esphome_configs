@@ -2,10 +2,10 @@
 substitutions:
   name: irt01
 
-globals:
-  - id: harccode
-    initial_value: '0x2004'
-    type: int
+#globals:
+#  - id: harccode
+#    initial_value: '0x2004'
+#    type: int
 
 esphome:
   name: ${name}
@@ -27,51 +27,53 @@ remote_transmitter:
 sensor:
   - platform: homeassistant
     id: Test_RC_Code
-    entity_id: input_text.ac_rc_code
+    entity_id: input_number.ac_rc_number
+    #entity_id: input_text.ac_rc_code
 
 button:
   - platform: template
-    name: "On/Off"
+    name: "Cabin AC On/Off"
     on_press:
       - remote_transmitter.transmit_pioneer: 
           rc_code_1: 0x2004
   - platform: template
-    name: "Mode"
+    name: "Cabin AC Mode"
     on_press:
       - remote_transmitter.transmit_pioneer: 
           rc_code_1: 0x200D
   - platform: template
-    name: "Up"
+    name: "Cabin AC Up"
     on_press:
       - remote_transmitter.transmit_pioneer: 
           rc_code_1: 0x2005
   - platform: template
-    name: "Down"
+    name: "Cabin AC Down"
     on_press:
       - remote_transmitter.transmit_pioneer: 
           rc_code_1: 0x2001
   - platform: template
-    name: "Speed"
+    name: "Cabin AC Speed"
     on_press:
       - remote_transmitter.transmit_pioneer: 
           rc_code_1: 0x2006
   - platform: template
-    name: "Timer"
+    name: "Cabin AC Timer"
     on_press:
       - remote_transmitter.transmit_pioneer: 
           rc_code_1: 0x2000
 
   - platform: template
-    name: "Code from HA"
+    name: "Cabin AC Code from HA"
     on_press:
-      - globals.set:
-          id: harccode
-          value: !lambda return int(id(Test_RC_Code));
+      #- globals.set:
+      #    id: harccode
+      #    value: !lambda return int(id(Test_RC_Code).state);
       - remote_transmitter.transmit_pioneer: 
-          rc_code_1: !lambda return id(harccode);
- #         rc_code_1: args: ["id(Test_RC_Code).state"] 
- #         rc_code_1: !lambda |-
- #           id(Test_RC_Code).publish_state(str.c_str());
+          rc_code_1: !lambda return int(id(Test_RC_Code).state);
+          #rc_code_1: !lambda |-
+            #ESP_LOGD("lambda","sent %i to trans", id(harccode));
+            #ESP_LOGD("lambda","got %i from sensor", id(Test_RC_Code));
+            #return id(harccode);
 
 
 #<<: !include include/pn_pac_default.yaml
