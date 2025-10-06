@@ -1,0 +1,21 @@
+---
+substitutions:
+  name: cabtemp8266
+
+esphome:
+  name: ${name}
+
+esp8266:
+  board: d1_mini
+
+sensor:
+  - platform: dht
+    pin: D2
+    temperature:
+      name: Cabin Office Temp
+    humidity:
+      name: Cabin Office Humidity
+    update_interval: 60s
+
+<<: !include include/pn_pac_default.yaml
+#<<: !include include/pw_pac_default.yaml
