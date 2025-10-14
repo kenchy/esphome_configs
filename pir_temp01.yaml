@@ -1,0 +1,30 @@
+---
+substitutions:
+  name: pirtemp01
+  climate_name: ${name}
+
+esphome:
+  name: ${name}
+  friendly_name: ${name}
+  platformio_options:
+    board_build.f_flash: 40000000L
+    board_build.flash_mode: dio
+    board_build.flash_size: 4MB
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: esp32c3
+  framework:
+    type: esp-idf
+
+binary_sensor:
+  - platform: gpio
+    pin: 5
+    name: "Test PIR Sensor"
+    device_class: motion
+
+web_server:
+
+
+<<: !include include/pwc3_pac_common.yaml
+

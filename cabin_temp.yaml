@@ -10,12 +10,17 @@ esp8266:
 
 sensor:
   - platform: dht
-    pin: D2
+    model: SI7021
+    pin:
+      number: D2
+      #mode:
+      #  input: true
+      #  pullup: false
     temperature:
       name: Cabin Office Temp
     humidity:
       name: Cabin Office Humidity
-    update_interval: 60s
+    update_interval: 10s
 
 <<: !include include/pn_pac_default.yaml
 #<<: !include include/pw_pac_default.yaml
