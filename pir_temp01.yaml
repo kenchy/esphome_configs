@@ -17,6 +17,23 @@ esp32:
   framework:
     type: esp-idf
 
+i2c:
+  sda: 4
+  scl: 3
+  scan: true
+
+sensor:
+  - platform: bmp280_i2c
+    temperature:
+      name: "Cabin ESP Temperature"
+    pressure:
+      name: "Cabin ESP Pressure"
+    #humidity:
+    #  name: "Cabin ESP Humidity"
+    address: 0x76
+    update_interval: 60s
+
+
 binary_sensor:
   - platform: gpio
     pin: 5
@@ -26,5 +43,5 @@ binary_sensor:
 web_server:
 
 
-<<: !include include/pwc3_pac_common.yaml
+<<: !include include/pwc3_pac_default.yaml
 
