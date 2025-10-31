@@ -108,6 +108,8 @@ light:
               color_temperature: 6534 K
               duration: 1000ms
 
+web_server:
+
 
 <<: !include include/pn_pac_common.yaml
 

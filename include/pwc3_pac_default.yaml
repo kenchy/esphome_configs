@@ -11,6 +11,7 @@ ota:
     password: !secret ota_pw
 
 wifi:
+  power_save_mode: none
   output_power: 8.5
   domain: ""
   use_address: "${name}.kenchycabin.co.uk"
