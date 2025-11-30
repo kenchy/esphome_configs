@@ -23,7 +23,8 @@ light:
    rgb_order: RGB
    chipset: WS2812
    pin: GPIO5
-   num_leds: 50
+   #num_leds: 50
+   num_leds: 100
    #rmt_channel: 0
    name: ${name}
    on_turn_on:

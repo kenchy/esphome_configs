@@ -13,17 +13,21 @@ esphome:
 esp8266:
   board: esp8285
 
+
+#This enables the receiver. The logs that come back mostly come from the receiver receiving from the transmitter
 remote_receiver:
   pin:
     number: GPIO14
     inverted: true
   dump: all
 
+#Not sure what the carrier duty is, but works!
 remote_transmitter:
   pin:
     number: GPIO4
   carrier_duty_percent: 50%
- 
+
+#This is a helper so a random code can be put in (the number in HA is decimal, number below are hex. 
 sensor:
   - platform: homeassistant
     id: Test_RC_Code
@@ -69,6 +73,9 @@ button:
       #    id: harccode
       #    value: !lambda return int(id(Test_RC_Code).state);
       - remote_transmitter.transmit_pioneer: 
+          #This took a while, rc_code needs a (hex?) integer, but number comes back as float hence int conversion
+          #Running it on the id() without state was returning a huge number
+          #To me it's not clear when the varius .state etc needed. But below example can put a 'variable' in any config.
           rc_code_1: !lambda return int(id(Test_RC_Code).state);
           #rc_code_1: !lambda |-
             #ESP_LOGD("lambda","sent %i to trans", id(harccode));
