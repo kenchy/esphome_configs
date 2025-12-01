@@ -10,6 +10,10 @@ esphome:
     board_build.f_flash: 40000000L
     board_build.flash_mode: dio
     board_build.flash_size: 4MB
+  on_boot:
+    - priority: -100
+      then:
+        - light.turn_on: xmasled
 
 esp32:
   board: esp32-c3-devkitm-1
@@ -23,14 +27,17 @@ light:
    rgb_order: RGB
    chipset: WS2812
    pin: GPIO5
-   #num_leds: 50
-   num_leds: 100
+   num_leds: 50
+   #num_leds: 100
    #rmt_channel: 0
    name: ${name}
+
    on_turn_on:
    - light.turn_on:
        id: xmasled
-       effect: "Red-Green Twinkle"
+       #effect: "Red-Green Twinkle"
+       #effect: "Blue-White Twinkle"
+       effect: "White Twinkle"
    effects:
      - addressable_color_wipe:
           name: Color Wipe Effect With Custom Values
@@ -74,6 +81,41 @@ light:
                   it[i] = esphome::Color(0, 0, 255);  // Change from green to blue
                 } else {
                   it[i] = esphome::Color(255, 0, 0);  // Change from blue to red
+                }
+              }
+            }
+     - addressable_lambda:
+         name: "Blue-White Twinkle"
+         update_interval: 100ms
+         lambda: |-
+            for (int i = 0; i < it.size(); i++) {
+              if (rand() % 10 == 0) {  // Randomly select some LEDs to twinkle
+                auto current_color = it[i].get();
+                if (current_color.red == 255 && current_color.green == 255 && current_color.blue == 255) {
+                  it[i] = esphome::Color(0, 0, 255);  // Change from white to  blue
+                //} else if (current_color.red == 0 && current_color.green == 255 && current_color.blue == 0) {
+                //  it[i] = esphome::Color(0, 0, 255);  // Change from green to blue
+                } else {
+                  it[i] = esphome::Color(255, 255, 255);  // Change from blue to white
+                }
+              }
+            }
+     - addressable_lambda:
+         name: "White Twinkle"
+         update_interval: 250ms
+         lambda: |-
+            for (int i = 0; i < it.size(); i++) {
+              if (rand() % 10 == 0) {  // Randomly select some LEDs to twinkle
+                auto current_color = it[i].get();
+                if (current_color.red == 220 && current_color.green == 200 && current_color.blue == 35) {
+                  it[i] = esphome::Color(0, 0, 0);  // Change from white to off
+                //} else if (current_color.red == 0 && current_color.green == 255 && current_color.blue == 0) {
+                //  it[i] = esphome::Color(0, 0, 255);  // Change from green to blue
+                } else {
+                  //ESP_LOGW("custom", "color red %d", current_color.red);
+                  //ESP_LOGW("custom", "color green %d", current_color.green);
+                  //ESP_LOGW("custom", "color blue %d", current_color.blue);
+                  it[i] = esphome::Color(220, 200, 35);  // Change from off to white
                 }
               }
             }
