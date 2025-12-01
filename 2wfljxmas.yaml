@@ -1,6 +1,6 @@
 ---
 substitutions:
-  name: 2wfllxmas
+  name: 2wfljxmas
   climate_name: ${name}
 
 esphome:
